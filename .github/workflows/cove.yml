@@ -60,7 +60,10 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
       - name: Install MariaDB Client
-        run: sudo apt-get install mariadb-client-10.6
+        run: sudo apt-get install mariadb-client mariadb-server
+
+      - name: Install Redis Server
+        run: sudo apt-get install redis-server -y
 
       - name: Install Dependencies
         run: |
