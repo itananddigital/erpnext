@@ -1,5 +1,5 @@
 
-name: CI
+name: po_test
 on:
   push:
     branches:
