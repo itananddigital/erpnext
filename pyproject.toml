@@ -80,11 +80,3 @@ docstring-code-format = true
 Homepage = "https://erpnext.com/"
 Repository = "https://github.com/frappe/erpnext.git"
 "Bug Reports" = "https://github.com/frappe/erpnext/issues"
-
-[pytest]
-addopts =
-    --cov=erpnext
-    --cov-report=term-missing
-    --cov-report=xml
-    --cov-fail-under=100
-    
