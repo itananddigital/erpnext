@@ -34,7 +34,7 @@ jobs:
         run: sudo apt-get install redis-server -y
 
       - name: Install MariaDB Client
-        run: sudo apt-get install mariadb-client-10.6
+        run: sudo apt-get install mariadb-client mariadb-server -y
       
       # Step 3: Install dependencies
       - name: Install Dependencies
