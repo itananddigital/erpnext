@@ -66,10 +66,7 @@ jobs:
       - name: Install Redis Server
         run: sudo apt-get install redis-server -y
 
-      - name: Install Dependencies
-        run: |
-          pip install pytest pytest-cov
-          
+             
       - name: Setup
         run: |
           pip install frappe-bench
@@ -97,6 +94,7 @@ jobs:
       - name: Run Tests
         working-directory: /home/runner/frappe-bench/apps/erpnext
         run: |
+          pip install pytest pytest-cov
           pytest --cov=erpnext --cov-report=term-missing --cov-report=xml --cov-fail-under=100
 
       # Step 6: Upload code coverage report
