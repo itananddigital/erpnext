@@ -95,8 +95,8 @@ jobs:
           
       # Step 5: Run tests with detailed coverage
       - name: Run Tests
+        working-directory: /home/runner/frappe-bench/apps/erpnext
         run: |
-          cd frappe-bench/apps/erpnext
           pytest --cov=erpnext --cov-report=term-missing --cov-report=xml --cov-fail-under=100
 
       # Step 6: Upload code coverage report
