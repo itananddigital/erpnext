@@ -78,7 +78,7 @@ jobs:
       - name: Install
         working-directory: /home/runner/frappe-bench
         run: |
-          bench get-app erpnext https://github.com/tinadn/erpnext.git --branch version-15
+          bench get-app erpnext https://github.com/tinadn/erpnext.git --branch develop
           bench setup requirements --dev
           bench new-site --db-root-password root --admin-password admin test_site
           bench --site test_site install-app erpnext
