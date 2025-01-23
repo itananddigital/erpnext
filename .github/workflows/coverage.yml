@@ -53,7 +53,7 @@ jobs:
 
       # Step 6: Upload code coverage report
       - name: Upload Coverage Report
-        uses: matthewcroughan/code-coverage-report-action@v2
+        uses: acid-chicken/lcov-reporter-action@v0.4.1
         with:
           coverage_file: frappe-bench/apps/frappe/coverage.xml
           minimum_coverage: 100
