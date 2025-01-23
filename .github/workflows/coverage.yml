@@ -2,7 +2,7 @@ name: Frappe Tests with Code Coverage
 on:
   push:
     branches:
-      - main
+      - pre-prod
   pull_request:
 jobs:
   test:
