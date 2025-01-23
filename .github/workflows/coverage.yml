@@ -53,7 +53,7 @@ jobs:
           sudo pip3 install frappe-bench
           bench init --frappe-branch version-15 frappe-bench
           cd frappe-bench
-          bench get-app erpnext https://github.com/tinadn/frappe/erpnext.git --branch version-15
+          bench get-app erpnext https://github.com/tinadn/erpnext.git --branch version-15
           bench new-site test_site --mariadb-root-password=root --admin-password=admin --install-app frappe --install-app erpnext
 
       # Step 5: Run tests with detailed coverage
