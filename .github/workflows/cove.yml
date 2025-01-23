@@ -82,7 +82,6 @@ jobs:
           bench setup requirements --dev
           bench new-site --db-root-password root --admin-password admin test_site
           bench --site test_site install-app erpnext
-          bench build
         env:
           CI: 'Yes'
       - name: Run Tests
