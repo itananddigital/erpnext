@@ -92,6 +92,7 @@ jobs:
           bench --site test_site run-tests --doctype "Purchase Order"
         env:
           TYPE: server
+          
 
       # Step 5: Run tests with detailed coverage
       - name: Run Tests
