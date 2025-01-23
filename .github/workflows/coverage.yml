@@ -53,20 +53,20 @@ jobs:
           sudo pip3 install frappe-bench
           bench init --frappe-branch version-15 frappe-bench
           cd frappe-bench
-          bench get-app erpnext https://github.com/frappe/erpnext.git --branch version-15
+          bench get-app erpnext https://github.com/tinadn/frappe/erpnext.git --branch version-15
           bench new-site test_site --mariadb-root-password=root --admin-password=admin --install-app frappe --install-app erpnext
 
       # Step 5: Run tests with detailed coverage
       - name: Run Tests
         run: |
-          cd frappe-bench/apps/frappe
-          pytest --cov=frappe --cov-report=term-missing --cov-report=xml --cov-fail-under=100
+          cd frappe-bench/apps/erpnext
+          pytest --cov=erpnext --cov-report=term-missing --cov-report=xml --cov-fail-under=100
 
       # Step 6: Upload code coverage report
       - name: Upload Coverage Report
         uses: acid-chicken/lcov-reporter-action@v0.4.1
         with:
-          coverage_file: frappe-bench/apps/frappe/coverage.xml
+          coverage_file: frappe-bench/apps/erpnext/coverage.xml
           minimum_coverage: 100
         env:
           DEV_TOKEN: ${{ secrets.DEV_TOKEN }}
