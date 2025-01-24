@@ -99,7 +99,7 @@ jobs:
         working-directory: /home/runner/frappe-bench/apps/erpnext
         run: |
           pip install pytest pytest-cov
-          pytest --cov=erpnext --cov-report=term-missing --cov-report=xml --cov-fail-under=100
+          pytest --cov=/home/runner/frappe-bench/apps/erpnext/ --cov-report=term-missing --cov-report=xml --cov-fail-under=100
 
       # Step 6: Upload code coverage report
       - name: Upload Coverage Report
