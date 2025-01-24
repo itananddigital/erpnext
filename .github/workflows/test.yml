@@ -1,12 +1,12 @@
 
-name: PO
+name: CI Erpnext
 on:
   push:
     branches:
       - pre-prod
   pull_request:
 concurrency:
-  group: develop-wellness-${{ github.event.number }}
+  group: develop-erpnext-${{ github.event.number }}
   cancel-in-progress: true
   
 jobs:
@@ -94,14 +94,15 @@ jobs:
         env:
           TYPE: server
           
-      # Step 5: Run tests with detailed coverage
       - name: Run ERPNext Tests (with code coverage)
-        working-directory: /home/runner/frappe-bench/apps/erpnext
+        working-directory: /home/runner/frappe-bench
         run: |
           pip install pytest pytest-cov
-          pytest --cov=erpnext --cov-report=term-missing 
-
-     # --cov-report=xml --cov-fail-under=1000     
+          bench --site test_site set-config allow_tests true
+          pytest --cov=erpnext --cov-report=term-missing --cov-report=xml --cov-fail-under=100    
+        env:
+          TYPE: server
+        
 
       # Step 6: Upload code coverage report
       - name: Upload Coverage Report
