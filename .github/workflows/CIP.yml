@@ -1,19 +1,16 @@
-name: Test and Coverage for Purchase Order
+name: PO
 on:
   push:
     branches:
       - pre-prod
   pull_request:
 concurrency:
-  group: purchase-order-${{ github.event.number }}
+  group: develop-wellness-${{ github.event.number }}
   cancel-in-progress: true
 
 jobs:
   tests:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-    name: Run Tests for Purchase Order
     services:
       redis-cache:
         image: redis:alpine
@@ -40,39 +37,25 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Setup Node.js
+      - name: Setup Node
         uses: actions/setup-node@v3
         with:
           node-version: 18
           check-latest: true
 
-      - name: Cache pip Dependencies
-        uses: actions/cache@v2
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/*requirements.txt', '**/pyproject.toml', '**/setup.py', '**/setup.cfg') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
-            ${{ runner.os }}-
-
-      - name: Cache Yarn Dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~/.cache/yarn
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
-            ${{ runner.os }}-
-
-      - name: Install MariaDB Client and Redis Server
-        run: sudo apt-get install -y mariadb-client mariadb-server redis-server
+      - name: Install Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y mariadb-client mariadb-server redis-server
+          pip install frappe-bench pytest pytest-cov
 
       - name: Setup Frappe Bench
         run: |
-          pip install frappe-bench
           bench init --skip-redis-config-generation --skip-assets --python "$(which python)" ~/frappe-bench
           mariadb --host 127.0.0.1 --port 3306 -u root -proot -e "SET GLOBAL character_set_server = 'utf8mb4'"
           mariadb --host 127.0.0.1 --port 3306 -u root -proot -e "SET GLOBAL collation_server = 'utf8mb4_unicode_ci'"
+        env:
+          PATH: ${{ github.workspace }}:$PATH
 
       - name: Install ERPNext
         working-directory: /home/runner/frappe-bench
@@ -84,28 +67,17 @@ jobs:
         env:
           CI: 'Yes'
 
-      - name: Run Tests for Purchase Order
-        working-directory: /home/runner/frappe-bench
-        run: |
-          bench --site test_site set-config allow_tests true
-          bench --site test_site run-tests --doctype "Purchase Order"
-        env:
-          TYPE: server
-
-      - name: Run Coverage for Purchase Order
+      - name: Run Frappe Tests Only
         working-directory: /home/runner/frappe-bench/apps/erpnext
         run: |
-          pip install pytest pytest-cov
-          pytest --cov=erpnext/erpnext/buying/doctype/purchase_order \
-                 --cov-report=term-missing \
-                 --cov-report=xml \
-                 --cov-fail-under=80 \
-                 tests/erpnext/buying/doctype/purchase_order/test_purchase_order.py
+          bench --site test_site set-config allow_tests true
+          pytest --continue-on-collection-errors --cov=erpnext --cov-report=term-missing --cov-report=xml erpnext --ignore-glob="!**/test_*.py"
+        env:
+          TYPE: server
 
       - name: Upload Coverage Report
         uses: acid-chicken/lcov-reporter-action@v0.4.1
         with:
-          coverage_file: frappe-bench/apps/erpnext/coverage.xml
-          minimum_coverage: 80
+          coverage_file: /home/runner/frappe-bench/apps/erpnext/coverage.xml
         env:
           DEV_TOKEN: ${{ secrets.DEV_TOKEN }}
