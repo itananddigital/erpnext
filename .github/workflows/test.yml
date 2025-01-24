@@ -102,13 +102,13 @@ jobs:
         env:
           TYPE: server
 
-      - name: Run ERPNext Tests (with code coverage)
-        working-directory: /home/runner/frappe-bench
-        run: |
-          pip install pytest pytest-cov
-          pytest --cov-branch --cov-report=xml
-        env:
-          TYPE: server
+      # - name: Run ERPNext Tests (with code coverage)
+      #   working-directory: /home/runner/frappe-bench
+      #   run: |
+      #     pip install pytest pytest-cov
+      #     pytest --cov-branch --cov-report=xml
+      #   env:
+      #     TYPE: server
 
 
       - name: Upload coverage data
