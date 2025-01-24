@@ -68,10 +68,10 @@ jobs:
           CI: 'Yes'
 
       - name: Run Frappe Tests Only
-        working-directory: /home/runner/frappe-bench/apps/erpnext
+        working-directory: /home/runner/frappe-bench/apps/frappe/
         run: |
           bench --site test_site set-config allow_tests true
-          pytest --continue-on-collection-errors --cov=erpnext --cov-report=term-missing --cov-report=xml erpnext --ignore-glob="!**/test_*.py"
+          pytest --cov=frappe --cov-report=term-missing --cov-report=xml frappe --ignore-glob="!**/test_*.py"
         env:
           TYPE: server
 
