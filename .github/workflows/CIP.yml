@@ -5,7 +5,7 @@ on:
       - pre-prod
   pull_request:
 concurrency:
-  group: develop-wellness-${{ github.event.number }}
+  group: test-${{ github.event.number }}
   cancel-in-progress: true
 
 jobs:
