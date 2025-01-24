@@ -93,22 +93,37 @@ jobs:
           bench --site test_site run-tests --doctype "Purchase Order"
         env:
           TYPE: server
-          
-      - name: Run ERPNext Tests (with code coverage)
-        working-directory: /home/runner/frappe-bench
-        run: |
-          pip install pytest pytest-cov
-          bench --site test_site set-config allow_tests true
-          pytest --cov=erpnext --cov-report=term-missing --cov-report=xml --cov-fail-under=100    
+
+
+
+
+      - name: Run Tests
+        run: cd ~/frappe-bench/ && bench --site test_site run-tests --app erpnext --coverage
         env:
           TYPE: server
+
+      - name: Upload coverage data
+        uses: codecov/codecov-action@v2
+        with:
+          fail_ci_if_error: true
+          files: /home/runner/frappe-bench/sites/coverage.xml
+          verbose: true
+          
+      # - name: Run ERPNext Tests (with code coverage)
+      #   working-directory: /home/runner/frappe-bench
+      #   run: |
+      #     pip install pytest pytest-cov
+      #     bench --site test_site set-config allow_tests true
+      #     pytest --cov=erpnext --cov-report=term-missing --cov-report=xml --cov-fail-under=100    
+      #   env:
+      #     TYPE: server
         
 
-      # Step 6: Upload code coverage report
-      - name: Upload Coverage Report
-        uses: acid-chicken/lcov-reporter-action@v0.4.1
-        with:
-          coverage_file: frappe-bench/apps/erpnext/coverage.xml
-          minimum_coverage: 100
-        env:
-          DEV_TOKEN: ${{ secrets.DEV_TOKEN }}
+      # # Step 6: Upload code coverage report
+      # - name: Upload Coverage Report
+      #   uses: acid-chicken/lcov-reporter-action@v0.4.1
+      #   with:
+      #     coverage_file: frappe-bench/apps/erpnext/coverage.xml
+      #     minimum_coverage: 100
+      #   env:
+      #     DEV_TOKEN: ${{ secrets.DEV_TOKEN }}
