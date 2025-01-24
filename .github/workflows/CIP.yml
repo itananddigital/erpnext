@@ -51,7 +51,8 @@ jobs:
 
       - name: Setup Frappe Bench
         run: |
-          bench init --skip-redis-config-generation --skip-assets --python "$(which python)" ~/frappe-bench
+          sudo pip3 install frappe-bench
+          bench init --frappe-branch version-15 frappe-bench
           mariadb --host 127.0.0.1 --port 3306 -u root -proot -e "SET GLOBAL character_set_server = 'utf8mb4'"
           mariadb --host 127.0.0.1 --port 3306 -u root -proot -e "SET GLOBAL collation_server = 'utf8mb4_unicode_ci'"
         env:
@@ -60,7 +61,7 @@ jobs:
       - name: Install ERPNext
         working-directory: /home/runner/frappe-bench
         run: |
-          bench get-app erpnext https://github.com/tinadn/erpnext.git --branch develop
+          bench get-app erpnext https://github.com/tinadn/erpnext.git --branch version-15
           bench setup requirements --dev
           bench new-site --db-root-password root --admin-password admin test_site
           bench --site test_site install-app erpnext
@@ -68,10 +69,10 @@ jobs:
           CI: 'Yes'
 
       - name: Run Frappe Tests Only
-        working-directory: /home/runner/frappe-bench/apps/frappe/
+        working-directory: /home/runner/frappe-bench/apps/erpnext
         run: |
           bench --site test_site set-config allow_tests true
-          pytest --cov=frappe --cov-report=term-missing --cov-report=xml frappe --ignore-glob="!**/test_*.py"
+          pytest --cov=erpnext --cov-report=term-missing --cov-report=xml erpnext --ignore-glob="!**/test_*.py"
         env:
           TYPE: server
 
