@@ -8,6 +8,7 @@ on:
 concurrency:
   group: develop-wellness-${{ github.event.number }}
   cancel-in-progress: true
+  
 jobs:
   tests:
     runs-on: ubuntu-latest
