@@ -69,13 +69,12 @@ jobs:
         run: |
           pip install frappe-bench
           bench init frappe-bench --frappe-path https://github.com/8848digital/frappe-v15.git --frappe-branch pre-prod
-          psql --host 127.0.0.1 --port 5432 -U root -p root -c "CREATE DATABASE test_site;"
       - name: Install
         working-directory: /home/runner/frappe-bench
         run: |
           bench get-app erpnext https://github.com/8848digital/erpnext.git --branch pre-prod
           bench setup requirements --dev
-          bench new-site --db-root-password root --admin-password admin test_site
+          bench new-site --db-type postgres --db-root-password root --admin-password admin test_site
           bench --site test_site install-app erpnext
         env:
           CI: 'Yes'
