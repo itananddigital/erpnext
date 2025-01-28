@@ -94,7 +94,7 @@ jobs:
       #   env:
       #     TYPE: server
       - name: Run Tests
-        run: cd ~/frappe-bench/ && bench --site test_site run-tests --app erpnext --doctype "Purchase Order" --coverage
+        run: cd ~/frappe-bench/ && bench --site test_site run-tests --app frappe --doctype "User" --coverage
         env:
           TYPE: server
       - name: Upload coverage data
