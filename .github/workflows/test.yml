@@ -96,9 +96,6 @@ jobs:
         env:
           TYPE: server
 
-
-
-
       - name: Run Tests
         run: cd ~/frappe-bench/ && bench --site test_site run-tests --app erpnext --doctype "Purchase Order" --coverage
         env:
