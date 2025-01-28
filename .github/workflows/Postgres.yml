@@ -69,7 +69,7 @@ jobs:
         run: |
           pip install frappe-bench
           bench init frappe-bench --frappe-path https://github.com/8848digital/frappe-v15.git --frappe-branch pre-prod
-          psql --host 127.0.0.1 --port 5432 -U root -c "CREATE DATABASE test_site;"
+          psql --host 127.0.0.1 --port 5432 -U root -p root -c "CREATE DATABASE test_site;"
       - name: Install
         working-directory: /home/runner/frappe-bench
         run: |
