@@ -68,7 +68,7 @@ jobs:
       - name: Setup
         run: |
           pip install frappe-bench
-          bench init frappe-bench --frappe-path https://github.com/8848digital/frappe-v15.git --frappe-branch pre-prod
+          bench init frappe-bench --frappe-path https://github.com/8848digital/frappe-v15.git --frappe-branch pre-prod ~/frappe-bench
       - name: Install
         working-directory: /home/runner/frappe-bench
         run: |
