@@ -96,7 +96,6 @@ jobs:
       #     TYPE: server
       - name: Run Tests
         run: cd ~/frappe-bench/ && bench --site test_site run-tests --app frappe --doctype "Role" --coverage || echo "Tests completed with errors, but proceeding..."
-  env:
         env:
           TYPE: server
           
