@@ -72,6 +72,7 @@ jobs:
           bench init --skip-redis-config-generation --skip-assets --python "$(which python)" --frappe-path https://github.com/8848digital/frappe-v15.git --frappe-branch pre-prod ~/frappe-bench
             
 
+
       # - name: Setup Frappe
       #   working-directory: /home/runner/frappe-bench
       #   run: |
