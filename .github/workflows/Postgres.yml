@@ -95,9 +95,10 @@ jobs:
       #   env:
       #     TYPE: server
       - name: Run Tests
-        run: cd ~/frappe-bench/ && bench --site test_site run-tests --app frappe --doctype "User" --coverage
+        run: cd ~/frappe-bench/ && bench --site test_site run-tests --app frappe --doctype "Role" --coverage
         env:
           TYPE: server
+          
       - name: Upload coverage data
         uses: codecov/codecov-action@v5
         with:
