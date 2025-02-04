@@ -93,24 +93,15 @@ jobs:
       #     bench --site test_site set-config allow_tests true
       #     bench --site test_site run-tests 
       #   env:
-      #     TYPE: server
-      # - name: Run Tests
-      #   run: cd ~/frappe-bench/ && bench --site test_site run-tests --app erpnext  --coverage  || echo "Tests completed with errors, but proceeding..."
-      #   env:
-      #     TYPE: server
+          TYPE: server
+      - name: Run Tests
+        run: cd ~/frappe-bench/ && bench --site test_site run-tests --app erpnext  --coverage  || echo "Tests completed with errors, but proceeding..."
+        env:
+          TYPE: server
 
       # - name: Run Tests
       #   run: |
       #     cd ~/frappe-bench/ && bench --site test_site run-tests --app erpnext --coverage 2>&1 | tee test_output.log || echo "Tests completed with errors, but proceeding..." grep -v "doctype" test_output.log > filtered_test_output.log || true
-      #   env:
-      #     TYPE: server
-
-      # - name: Run Tests
-      #   run: |
-      #     set +e  # Prevents script from exiting on error
-      #     cd ~/frappe-bench/
-      #     bench --site test_site run-tests --app erpnext --coverage 2>&1 | tee test_output.log
-      #     echo "Tests completed, proceeding with next steps..."
       #   env:
       #     TYPE: server
 
@@ -123,11 +114,7 @@ jobs:
         env:
           TYPE: server
 
-      - name: Upload Test Logs
-        uses: actions/upload-artifact@v4
-        with:
-         name: test-output
-         path: ~/frappe-bench/test_output.log
+     
 
 
           
