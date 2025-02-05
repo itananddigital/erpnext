@@ -1,11 +1,11 @@
-name: CI Erpnext
+name: Mariadb Erpnext
 on:
   push:
     branches:
       - version-15
   pull_request:
 concurrency:
-  group: develop-erpnext-${{ github.event.number }}
+  group: mariadb-erpnext-${{ github.event.number }}
   cancel-in-progress: true
 jobs:
   tests:
