@@ -73,6 +73,7 @@ jobs:
         working-directory: /home/runner/frappe-bench
         run: |
           bench get-app erpnext https://github.com/itananddigital/erpnext --branch version-15
+          bench get-app --branch version-15 payments
           bench setup requirements --dev
           bench new-site --db-root-password root --admin-password admin test_site
           bench --site test_site install-app erpnext
