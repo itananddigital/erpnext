@@ -104,15 +104,23 @@ jobs:
       #   env:
       #     TYPE: server
 
+      # - name: Run Tests
+      #   run: |
+      #     set +e  # Prevents script from exiting on error
+      #     cd ~/frappe-bench/
+      #     bench --site test_site run-tests --app erpnext --coverage 2>&1 | tee test_output.log
+      #     echo "Tests completed, proceeding with next steps..."
+      #   env:
+      #     TYPE: server
+
+
       - name: Run Tests
+        working-directory: /home/runner/frappe-bench
         run: |
-          set +e  # Prevents script from exiting on error
-          cd ~/frappe-bench/
-          bench --site test_site run-tests --app erpnext --coverage 2>&1 | tee test_output.log
-          echo "Tests completed, proceeding with next steps..."
+          bench --site test_site set-config allow_tests true
+          bench --site test_site run-tests --app erpnext  --coverage  || echo "Tests completed with errors, but proceeding..."
         env:
           TYPE: server
-
      
 
 
