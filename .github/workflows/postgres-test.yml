@@ -82,12 +82,10 @@ jobs:
         run: |
           bench get-app erpnext https://github.com/nirav8848/erpnext.git --branch pre-prod
           bench get-app https://github.com/8848digital/Assets --branch pre-prod
-          bench get-app https://nirav8848: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@github.com/8848digital/CRM.git --branch pre-prod
           bench setup requirements --dev
           bench new-site --db-type postgres --db-root-password root --admin-password admin test_site
           bench --site test_site install-app erpnext
           bench --site test_site install-app assets
-          bench --site test_site install-app crm
           
         env:
           CI: 'Yes'
