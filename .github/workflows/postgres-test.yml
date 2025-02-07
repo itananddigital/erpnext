@@ -80,7 +80,7 @@ jobs:
       - name: Install
         working-directory: /home/runner/frappe-bench
         run: |
-          bench get-app erpnext https://github.com/8848digital/erpnext.git --branch pre-prod
+          bench get-app erpnext https://github.com/nirav8848/erpnext.git --branch pre-prod
           bench setup requirements --dev
           bench new-site --db-type postgres --db-root-password root --admin-password admin test_site
           bench --site test_site install-app erpnext
