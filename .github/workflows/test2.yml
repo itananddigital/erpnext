@@ -1,4 +1,4 @@
-name: Mariadb Erpnext test
+name: Mariadb Erpnext
 on:
   push:
     branches:
@@ -6,7 +6,7 @@ on:
   pull_request:
 
 concurrency:
-  group: mariadb-erpnext2-${{ github.event.number }}
+  group: mariadb-erpnext-${{ github.event.number }}
   cancel-in-progress: true
 
 jobs:
@@ -41,23 +41,15 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Install Coverage Tool
-        run: pip install coverage
+      - name: Install Test Dependencies
+        run: |
+          pip install coverage pytest pytest-cov
 
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
           node-version: 18
           check-latest: true
-
-      - name: Cache pip
-        uses: actions/cache@v2
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/*requirements.txt', '**/pyproject.toml', '**/setup.py', '**/setup.cfg') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
-            ${{ runner.os }}-
 
       - name: Install MariaDB & Redis
         run: |
@@ -87,9 +79,7 @@ jobs:
         working-directory: /home/runner/frappe-bench
         run: |
           bench --site test_site set-config allow_tests true
-          coverage run --source=apps/erpnext -m pytest --app erpnext || echo "Tests completed with errors"
-          coverage xml -o sites/coverage.xml  # Generates coverage.xml for Codecov
-          coverage html -d sites/coverage_html  # Optional: For HTML visualization
+          pytest --cov=apps/erpnext --cov-report=xml:sites/coverage.xml --cov-report=html:sites/coverage_html || echo "Tests completed with errors"
         env:
           TYPE: server
 
