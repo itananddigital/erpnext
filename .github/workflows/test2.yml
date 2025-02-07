@@ -1,4 +1,4 @@
-name: Mariadb Erpnext
+name: Mariadb Erpnextv Test
 on:
   push:
     branches:
@@ -6,7 +6,7 @@ on:
   pull_request:
 
 concurrency:
-  group: mariadb-erpnext-${{ github.event.number }}
+  group: mariadb-erpnexttest-${{ github.event.number }}
   cancel-in-progress: true
 
 jobs:
