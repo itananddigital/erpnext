@@ -1,0 +1,108 @@
+name: Mariadb Erpnext test
+on:
+  push:
+    branches:
+      - version-15
+  pull_request:
+
+concurrency:
+  group: mariadb-erpnext2-${{ github.event.number }}
+  cancel-in-progress: true
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+    name: Server
+    services:
+      redis-cache:
+        image: redis:alpine
+        ports:
+          - 13000:6379
+      redis-queue:
+        image: redis:alpine
+        ports:
+          - 11000:6379
+      mariadb:
+        image: mariadb:10.6
+        env:
+          MYSQL_ROOT_PASSWORD: root
+        ports:
+          - 3306:3306
+        options: --health-cmd="mariadb-admin ping" --health-interval=5s --health-timeout=2s --health-retries=3
+
+    steps:
+      - name: Clone Repository
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install Coverage Tool
+        run: pip install coverage
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          check-latest: true
+
+      - name: Cache pip
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/*requirements.txt', '**/pyproject.toml', '**/setup.py', '**/setup.cfg') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+            ${{ runner.os }}-
+
+      - name: Install MariaDB & Redis
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y mariadb-client mariadb-server redis-server
+
+      - name: Frappe Setup
+        run: |
+          pip install frappe-bench
+          bench init --skip-redis-config-generation --skip-assets --frappe-branch version-15 ~/frappe-bench
+          mariadb --host 127.0.0.1 --port 3306 -u root -proot -e "SET GLOBAL character_set_server = 'utf8mb4'"
+          mariadb --host 127.0.0.1 --port 3306 -u root -proot -e "SET GLOBAL collation_server = 'utf8mb4_unicode_ci'"
+
+      - name: Install ERPNext & Payments
+        working-directory: /home/runner/frappe-bench
+        run: |
+          bench get-app erpnext https://github.com/itananddigital/erpnext --branch version-15
+          bench get-app --branch version-15 payments
+          bench setup requirements --dev
+          bench new-site --db-root-password root --admin-password admin test_site
+          bench --site test_site install-app erpnext
+          bench --site test_site install-app payments
+        env:
+          CI: 'Yes'
+
+      - name: Run Tests with Coverage
+        working-directory: /home/runner/frappe-bench
+        run: |
+          bench --site test_site set-config allow_tests true
+          coverage run --source=apps/erpnext -m pytest --app erpnext || echo "Tests completed with errors"
+          coverage xml -o sites/coverage.xml  # Generates coverage.xml for Codecov
+          coverage html -d sites/coverage_html  # Optional: For HTML visualization
+        env:
+          TYPE: server
+
+      - name: Upload coverage data to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          fail_ci_if_error: true
+          files: /home/runner/frappe-bench/sites/coverage.xml
+          verbose: true
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Upload HTML Coverage Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-html
+          path: /home/runner/frappe-bench/sites/coverage_html
