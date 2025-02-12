@@ -129,7 +129,7 @@ jobs:
         working-directory: /home/runner/frappe-bench
         run: |
           bench --site test_site set-config allow_tests true
-          bench --site test_site execute frappe.auth.login_as --args '["Administrator"]'
+          bench --site test_site execute "frappe.set_user('Administrator')"
           bench --site test_site run-tests --app erpnext  --coverage  || echo "Tests completed with errors, but proceeding..."
         env:
           TYPE: server
